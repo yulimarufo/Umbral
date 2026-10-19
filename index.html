@@ -30,7 +30,7 @@
         body { background-color: #0a0612; color: #f3f0ff; min-height: 100vh; }
         @keyframes breathe { 
             0%, 100% { transform: scale(1); opacity: 0.4; } 
-            50% { transform: scale(1.2); opacity: 1; } 
+            50% { transform: scale(1.15); opacity: 0.9; } 
         }
         @keyframes pulseGlow { 
             0% { opacity: 1; } 
@@ -51,11 +51,26 @@
 <body class="flex flex-col items-center justify-start p-4 sm:p-6">
 
     <div class="w-full max-w-xl flex flex-col gap-6 pb-12">
-        <header class="text-center py-4">
-            <h1 class="text-3xl font-bold text-accent tracking-wider mb-1">Umbral</h1>
-            <p class="text-textMuted text-sm sm:text-base">Técnica de Sugestión Nocturna (21 Días)</p>
+        <header class="text-center py-3">
+            <h1 class="text-3xl sm:text-4xl font-bold text-accent tracking-wider mb-1">Umbral</h1>
+            <p class="text-textMuted text-xs sm:text-sm">Técnica de Auto-Sugestión Nocturna (21 Días)</p>
         </header>
 
+        <!-- Inspiracional: El Umbral del Sueño -->
+        <div class="bg-gradient-to-b from-bgCard to-[#1a1230] border border-borderCustom rounded-2xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-accent/10 rounded-full blur-2xl"></div>
+            <h2 class="text-base sm:text-lg font-semibold text-accent mb-2 flex items-center gap-2">
+                <span>🌌</span> La Ventana Sagrada de tu Mente
+            </h2>
+            <p class="text-xs sm:text-sm text-textMain/90 leading-relaxed mb-3">
+                Justo antes de quedarte dormido, tu cerebro entra en el <strong>estado Alpha y Theta</strong>. En este instante mágico, la mente crítica y analítica baja la guardia, abriendo una vía directa a tu <strong>subconsciente</strong>.
+            </p>
+            <p class="text-xs sm:text-sm text-textMuted leading-relaxed">
+                Lo que siembras en este umbral se procesa durante tus 8 horas de sueño. Al repetir tu intención durante <strong>21 días continuos</strong>, reescribes tus creencias profundas y moldeas tu realidad desde el descanso absoluto.
+            </p>
+        </div>
+
+        <!-- Formulario de Afirmación -->
         <div class="bg-bgCard border border-borderCustom rounded-2xl p-5 sm:p-6 shadow-2xl">
             <h2 class="text-lg font-semibold text-textMain mb-4 flex items-center gap-2">
                 <span>✨</span> Tu Afirmación Nocturna
@@ -85,9 +100,9 @@
 
             <div class="text-xs sm:text-sm text-textMuted mb-2">Música o Sonido de Fondo:</div>
             <div class="grid grid-cols-3 gap-2 mb-6">
-                <div onclick="setSound('theta', this)" class="sound-opt active cursor-pointer p-2.5 text-center bg-bgPrimary border border-accent rounded-xl text-xs font-medium text-textMain bg-accent/10 transition-all">Ondas Theta (6Hz)</div>
-                <div onclick="setSound('rain', this)" class="sound-opt cursor-pointer p-2.5 text-center bg-bgPrimary border border-borderCustom rounded-xl text-xs font-medium text-textMuted transition-all hover:border-accent hover:text-textMain">Lluvia Suave</div>
-                <div onclick="setSound('pad', this)" class="sound-opt cursor-pointer p-2.5 text-center bg-bgPrimary border border-borderCustom rounded-xl text-xs font-medium text-textMuted transition-all hover:border-accent hover:text-textMain">Pad Espacial</div>
+                <div onclick="setSound('theta', this)" class="sound-opt active cursor-pointer p-2.5 text-center bg-bgPrimary border border-accent rounded-xl text-xs font-medium text-textMain bg-accent/10 transition-all">Ondas Theta (Armónicas)</div>
+                <div onclick="setSound('rain', this)" class="sound-opt cursor-pointer p-2.5 text-center bg-bgPrimary border border-borderCustom rounded-xl text-xs font-medium text-textMuted transition-all hover:border-accent hover:text-textMain">Lluvia Orgánica</div>
+                <div onclick="setSound('pad', this)" class="sound-opt cursor-pointer p-2.5 text-center bg-bgPrimary border border-borderCustom rounded-xl text-xs font-medium text-textMuted transition-all hover:border-accent hover:text-textMain">Pad Meditativo</div>
             </div>
 
             <button onclick="startNightMode()" class="w-full bg-accent hover:opacity-90 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg transition-opacity flex items-center justify-center gap-2 text-sm sm:text-base">
@@ -95,11 +110,12 @@
             </button>
         </div>
 
+        <!-- Seguimiento 21 Días -->
         <div class="bg-bgCard border border-borderCustom rounded-2xl p-5 sm:p-6 shadow-2xl">
             <h2 class="text-lg font-semibold text-textMain mb-1 flex items-center gap-2">
                 <span>📊</span> Progreso del Ciclo (21 Días)
             </h2>
-            <p class="text-xs sm:text-sm text-textMuted mb-4">Marca cada noche completada para formar tu hábito subconsciente:</p>
+            <p class="text-xs sm:text-sm text-textMuted mb-4">Marca cada noche completada para consolidar la red neuronal:</p>
             
             <div class="grid grid-cols-7 gap-2 mb-4" id="tracker-grid"></div>
             
@@ -109,16 +125,17 @@
         </div>
     </div>
 
+    <!-- Modal Noche -->
     <div id="night-modal" class="fixed inset-0 bg-bgPrimary z-50 hidden flex-col items-center justify-between p-6 sm:p-12 text-center">
         <div class="text-xs text-textMuted tracking-widest uppercase">MODO UMBRAL ACTIVO</div>
         
-        <div class="breathing-circle w-36 h-36 sm:w-48 sm:h-48 border-2 border-accent rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(157,78,221,0.4)] my-auto">
+        <div class="breathing-circle w-36 h-36 sm:w-48 sm:h-48 border border-accent/60 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(157,78,221,0.25)] my-auto bg-accent/5">
             <span class="text-3xl sm:text-4xl">💤</span>
         </div>
         
         <div class="max-w-md mx-auto my-4">
             <p id="night-text" class="text-lg sm:text-xl font-medium leading-relaxed mb-4 text-textMain"></p>
-            <p class="text-xs sm:text-sm text-textMuted">La mente crítica está bajando la guardia. Relájate y déjate llevar al sueño profundo.</p>
+            <p class="text-xs sm:text-sm text-textMuted">Tu mente crítica descansa. Relaja los hombros y absorbe esta afirmación mientras duermes.</p>
         </div>
         
         <button onclick="closeNightMode()" class="w-full max-w-xs mx-auto bg-accent hover:opacity-90 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg transition-opacity text-sm sm:text-base">
@@ -126,6 +143,7 @@
         </button>
     </div>
 
+    <!-- Modal Mensajes -->
     <div id="custom-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-bgCard border border-borderCustom rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl">
             <div id="modal-icon" class="text-3xl mb-3">⚠️</div>
@@ -144,10 +162,10 @@
         let recordedAudioUrl = null;
         let audioContext = null;
         let isPlayingAmbient = false;
-        let ambientOscillator = null;
+        
+        // Audio synthesis nodes
         let ambientGain = null;
-        let ambientFilter = null;
-        let noiseNode = null;
+        let masterOscillators = [];
         let activeVoiceAudio = null;
         let audioTypeSupported = 'audio/webm';
 
@@ -224,7 +242,6 @@
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                     
-                    // Detect best supported MIME type for cross-browser playback
                     if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
                         audioTypeSupported = 'audio/webm;codecs=opus';
                     } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
@@ -250,7 +267,6 @@
                         btn.classList.remove('bg-rose-600', 'border-rose-600', 'recording-pulse', 'text-white');
                         btn.classList.add('bg-bgPrimary', 'text-textMain');
                         
-                        // Stop tracks to release microphone cleanly (avoids Notion/Browser extension locks)
                         stream.getTracks().forEach(track => track.stop());
                     };
                     
@@ -259,7 +275,7 @@
                     btn.classList.remove('bg-bgPrimary', 'text-textMain');
                     btn.classList.add('bg-rose-600', 'border-rose-600', 'recording-pulse', 'text-white');
                 } catch (err) {
-                    showMessage("No se pudo acceder al micrófono. Verifica los permisos de tu navegador o desactiva extensiones de terceros.", "🎙️");
+                    showMessage("No se pudo acceder al micrófono. Verifica los permisos de tu navegador.", "🎙️");
                 }
             } else {
                 mediaRecorder.stop();
@@ -285,45 +301,91 @@
             currentSound = type;
         }
 
+        /* Continuous and Warm Audio Engine */
         function startAmbientSound() {
             if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
             if (audioContext.state === 'suspended') audioContext.resume();
 
             ambientGain = audioContext.createGain();
-            ambientGain.gain.setValueAtTime(0.12, audioContext.currentTime);
+            ambientGain.gain.setValueAtTime(0.08, audioContext.currentTime); // Low smooth volume
             ambientGain.connect(audioContext.destination);
 
+            masterOscillators = [];
+
             if (currentSound === 'theta') {
-                ambientOscillator = audioContext.createOscillator();
-                ambientOscillator.type = 'sine';
-                ambientOscillator.frequency.setValueAtTime(140, audioContext.currentTime);
-                ambientOscillator.connect(ambientGain);
-                ambientOscillator.start();
+                // Warm Binaural Ambient Theta (Deep relaxation 108Hz + 114Hz -> 6Hz binaural beat)
+                const osc1 = audioContext.createOscillator();
+                const osc2 = audioContext.createOscillator();
+                const filter = audioContext.createBiquadFilter();
+
+                osc1.type = 'sine';
+                osc2.type = 'sine';
+                osc1.frequency.setValueAtTime(108, audioContext.currentTime);
+                osc2.frequency.setValueAtTime(114, audioContext.currentTime);
+
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(250, audioContext.currentTime);
+
+                osc1.connect(filter);
+                osc2.connect(filter);
+                filter.connect(ambientGain);
+
+                osc1.start();
+                osc2.start();
+                masterOscillators.push(osc1, osc2);
+
             } else if (currentSound === 'rain') {
+                // Warm Pink Noise Rain simulation with soft lowpass
                 const bufferSize = 2 * audioContext.sampleRate;
                 const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
                 const output = noiseBuffer.getChannelData(0);
+                let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+
                 for (let i = 0; i < bufferSize; i++) {
-                    output[i] = Math.random() * 2 - 1;
+                    let white = Math.random() * 2 - 1;
+                    b0 = 0.99886 * b0 + white * 0.0555179;
+                    b1 = 0.99332 * b1 + white * 0.0750759;
+                    b2 = 0.96900 * b2 + white * 0.1538520;
+                    b3 = 0.86650 * b3 + white * 0.3104856;
+                    b4 = 0.55000 * b4 + white * 0.5329522;
+                    b5 = -0.7616 * b5 - white * 0.0168980;
+                    output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                    output[i] *= 0.04; 
+                    b6 = white * 0.115926;
                 }
-                noiseNode = audioContext.createBufferSource();
+
+                const noiseNode = audioContext.createBufferSource();
                 noiseNode.buffer = noiseBuffer;
                 noiseNode.loop = true;
 
-                ambientFilter = audioContext.createBiquadFilter();
-                ambientFilter.type = 'lowpass';
-                ambientFilter.frequency.setValueAtTime(350, audioContext.currentTime);
+                const filter = audioContext.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.setValueAtTime(400, audioContext.currentTime);
 
-                noiseNode.connect(ambientFilter);
-                ambientFilter.connect(ambientGain);
+                noiseNode.connect(filter);
+                filter.connect(ambientGain);
                 noiseNode.start();
+                masterOscillators.push(noiseNode);
+
             } else {
-                ambientOscillator = audioContext.createOscillator();
-                ambientOscillator.type = 'triangle';
-                ambientOscillator.frequency.setValueAtTime(108, audioContext.currentTime);
-                ambientOscillator.connect(ambientGain);
-                ambientOscillator.start();
+                // Meditative Ambient Pad (Triad Chord with LFO modulation)
+                const freqs = [130.81, 164.81, 196.00]; // C3 Chord
+                const padFilter = audioContext.createBiquadFilter();
+                padFilter.type = 'lowpass';
+                padFilter.frequency.setValueAtTime(300, audioContext.currentTime);
+
+                freqs.forEach(freq => {
+                    const osc = audioContext.createOscillator();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, audioContext.currentTime);
+                    osc.connect(padFilter);
+                    osc.start();
+                    masterOscillators.push(osc);
+                });
+
+                padFilter.connect(ambientGain);
             }
+
             isPlayingAmbient = true;
 
             if (recordedAudioUrl) {
@@ -334,25 +396,22 @@
         function playVoiceLoop() {
             if (!isPlayingAmbient || !recordedAudioUrl) return;
             activeVoiceAudio = new Audio(recordedAudioUrl);
-            activeVoiceAudio.volume = 0.85;
+            activeVoiceAudio.volume = 0.9;
             activeVoiceAudio.onended = () => {
                 if (isPlayingAmbient) {
-                    setTimeout(playVoiceLoop, 4000);
+                    setTimeout(playVoiceLoop, 3500); // Gentle 3.5s pause between repetitions
                 }
             };
-            activeVoiceAudio.play().catch(e => console.log("Audio loop handled", e));
+            activeVoiceAudio.play().catch(e => console.log("Audio play caught", e));
         }
 
         function stopAmbientSound() {
             isPlayingAmbient = false;
-            if (ambientOscillator) {
-                try { ambientOscillator.stop(); } catch(e){}
-                ambientOscillator = null;
-            }
-            if (noiseNode) {
-                try { noiseNode.stop(); } catch(e){}
-                noiseNode = null;
-            }
+            masterOscillators.forEach(node => {
+                try { node.stop(); } catch(e){}
+            });
+            masterOscillators = [];
+            
             if (activeVoiceAudio) {
                 activeVoiceAudio.pause();
                 activeVoiceAudio = null;
