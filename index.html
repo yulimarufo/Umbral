@@ -1,1 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Umbral - Sugestión Nocturna 21 Días</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgPrimary: '#0a0612',
+                        bgCard: '#161026',
+                        accent: '#9d4edd',
+                        accentGlow: 'rgba(157, 78, 221, 0.3)',
+                        textMain: '#f3f0ff',
+                        textMuted: '#b1a7d8',
+                        borderCustom: '#2c204a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0a0612; color: #f3f0ff; min-height: 100vh; }
+        @keyframes breathe { 
+            0%, 100% { transform: scale(1); opacity: 0.4; } 
+            50% { transform: scale(1.2); opacity: 1; } 
+        }
+        @keyframes pulseGlow { 
+            0% { opacity: 1; } 
+            50% { opacity: 0.5; } 
+            100% { opacity: 1; } 
+        }
+        .breathing-circle {
+            animation: breathe 6s infinite ease-in-out;
+        }
+        .recording-pulse {
+            animation: pulseGlow 1.5s infinite;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0612; }
+        ::-webkit-scrollbar-thumb { background: #2c204a; border-radius: 3px; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-start p-4 sm:p-6">
 
+    <div class="w-full max-w-xl flex flex-col gap-6 pb-12">
+        <header class="text-center py-4">
+            <h1 class="text-3xl font-bold text-accent tracking-wider mb-1">Umbral</h1>
+            <p class="text-textMuted text-sm sm:text-base">Técnica de Sugestión Nocturna (21 Días)</p>
+        </header>
+
+        <div class="bg-bgCard border border-borderCustom rounded-2xl p-5 sm:p-6 shadow-2xl">
+            <h2 class="text-lg font-semibold text-textMain mb-4 flex items-center gap-2">
+                <span>✨</span> Tu Afirmación Nocturna
+            </h2>
+            
+            <div class="grid grid-cols-3 gap-2 mb-4">
+                <button onclick="setCategory('salud')" class="cat-btn bg-bgPrimary border border-borderCustom text-textMuted py-2.5 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all text-center active hover:border-accent hover:text-textMain" data-cat="salud">Salud y Sanación</button>
+                <button onclick="setCategory('calma')" class="cat-btn bg-bgPrimary border border-borderCustom text-textMuted py-2.5 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all text-center hover:border-accent hover:text-textMain" data-cat="calma">Paz Mental</button>
+                <button onclick="setCategory('prosperidad')" class="cat-btn bg-bgPrimary border border-borderCustom text-textMuted py-2.5 px-2 rounded-xl text-xs sm:text-sm font-medium transition-all text-center hover:border-accent hover:text-textMain" data-cat="prosperidad">Transformación</button>
+            </div>
+            
+            <textarea id="affirmation-input" oninput="validateAffirmation()" placeholder="Escribe tu afirmación en presente y primera persona..." class="w-full bg-bgPrimary border border-borderCustom text-textMain p-3.5 rounded-xl text-sm sm:text-base resize-none h-28 focus:border-accent focus:outline-none transition-colors">Mi cuerpo fue creado por una inteligencia infinita. Esa misma inteligencia sabe cómo sanarlo, y ahora mismo lo está devolviendo a su diseño original.</textarea>
+            
+            <div id="validation-msg" class="text-xs sm:text-sm p-3 rounded-xl mb-4 flex items-center gap-2 bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                ✓ Frase redactada en tiempo presente y primera persona.
+            </div>
+
+            <div class="text-xs sm:text-sm text-textMuted mb-2">Reproducción en voz propia (Opcional):</div>
+            <div class="flex flex-col sm:flex-row gap-2 mb-4">
+                <button id="rec-btn" onclick="toggleRecording()" class="flex-1 py-2.5 px-4 rounded-xl border border-borderCustom bg-bgPrimary text-textMain text-sm font-medium hover:border-accent transition-all flex items-center justify-center gap-2">
+                    🎙️ Grabar mi voz
+                </button>
+                <button id="play-rec-btn" onclick="playRecording()" style="display:none;" class="flex-1 py-2.5 px-4 rounded-xl border border-accent bg-accent/20 text-textMain text-sm font-medium hover:bg-accent/30 transition-all flex items-center justify-center gap-2">
+                    ▶️ Escuchar grabación
+                </button>
+            </div>
+
+            <div class="text-xs sm:text-sm text-textMuted mb-2">Música o Sonido de Fondo:</div>
+            <div class="grid grid-cols-3 gap-2 mb-6">
+                <div onclick="setSound('theta', this)" class="sound-opt active cursor-pointer p-2.5 text-center bg-bgPrimary border border-accent rounded-xl text-xs font-medium text-textMain bg-accent/10 transition-all">Ondas Theta (6Hz)</div>
+                <div onclick="setSound('rain', this)" class="sound-opt cursor-pointer p-2.5 text-center bg-bgPrimary border border-borderCustom rounded-xl text-xs font-medium text-textMuted transition-all hover:border-accent hover:text-textMain">Lluvia Suave</div>
+                <div onclick="setSound('pad', this)" class="sound-opt cursor-pointer p-2.5 text-center bg-bgPrimary border border-borderCustom rounded-xl text-xs font-medium text-textMuted transition-all hover:border-accent hover:text-textMain">Pad Espacial</div>
+            </div>
+
+            <button onclick="startNightMode()" class="w-full bg-accent hover:opacity-90 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg transition-opacity flex items-center justify-center gap-2 text-sm sm:text-base">
+                🌙 Iniciar Modo Umbral del Sueño
+            </button>
+        </div>
+
+        <div class="bg-bgCard border border-borderCustom rounded-2xl p-5 sm:p-6 shadow-2xl">
+            <h2 class="text-lg font-semibold text-textMain mb-1 flex items-center gap-2">
+                <span>📊</span> Progreso del Ciclo (21 Días)
+            </h2>
+            <p class="text-xs sm:text-sm text-textMuted mb-4">Marca cada noche completada para formar tu hábito subconsciente:</p>
+            
+            <div class="grid grid-cols-7 gap-2 mb-4" id="tracker-grid"></div>
+            
+            <button onclick="resetTracker()" class="w-full py-2.5 border border-accent text-accent rounded-xl font-medium text-sm hover:bg-accent/10 transition-all">
+                Reiniciar Ciclo
+            </button>
+        </div>
+    </div>
+
+    <div id="night-modal" class="fixed inset-0 bg-bgPrimary z-50 hidden flex-col items-center justify-between p-6 sm:p-12 text-center">
+        <div class="text-xs text-textMuted tracking-widest uppercase">MODO UMBRAL ACTIVO</div>
+        
+        <div class="breathing-circle w-36 h-36 sm:w-48 sm:h-48 border-2 border-accent rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(157,78,221,0.4)] my-auto">
+            <span class="text-3xl sm:text-4xl">💤</span>
+        </div>
+        
+        <div class="max-w-md mx-auto my-4">
+            <p id="night-text" class="text-lg sm:text-xl font-medium leading-relaxed mb-4 text-textMain"></p>
+            <p class="text-xs sm:text-sm text-textMuted">La mente crítica está bajando la guardia. Relájate y déjate llevar al sueño profundo.</p>
+        </div>
+        
+        <button onclick="closeNightMode()" class="w-full max-w-xs mx-auto bg-accent hover:opacity-90 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg transition-opacity text-sm sm:text-base">
+            Finalizar Sesión
+        </button>
+    </div>
+
+    <div id="custom-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-bgCard border border-borderCustom rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl">
+            <div id="modal-icon" class="text-3xl mb-3">⚠️</div>
+            <p id="modal-message" class="text-textMain text-sm sm:text-base mb-6 leading-relaxed"></p>
+            <div id="modal-buttons" class="flex gap-3 justify-center">
+                <button onclick="closeCustomModal()" class="flex-1 py-2.5 bg-accent text-white font-semibold rounded-xl text-sm hover:opacity-90 transition-opacity">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSound = 'theta';
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let recordedAudioBlob = null;
+        let recordedAudioUrl = null;
+        let audioContext = null;
+        let isPlayingAmbient = false;
+        let ambientOscillator = null;
+        let ambientGain = null;
+        let ambientFilter = null;
+        let noiseNode = null;
+        let activeVoiceAudio = null;
+        let audioTypeSupported = 'audio/webm';
+
+        const examples = {
+            salud: "Mi cuerpo fue creado por una inteligencia infinita. Esa misma inteligencia sabe cómo sanarlo, y ahora mismo lo está devolviendo a su diseño original.",
+            calma: "Inhalo profunda tranquilidad y exhalo cualquier tensión. Mi mente descansa en completa quietud.",
+            prosperidad: "La abundancia fluye de manera natural en mi vida y cada día me abro a recibir nuevas oportunidades."
+        };
+
+        function showMessage(msg, icon = '⚠️', showCancel = false, onConfirm = null) {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-message').innerText = msg;
+            document.getElementById('modal-icon').innerText = icon;
+            const btnContainer = document.getElementById('modal-buttons');
+            
+            if (showCancel) {
+                btnContainer.innerHTML = `
+                    <button onclick="closeCustomModal()" class="flex-1 py-2.5 bg-bgPrimary border border-borderCustom text-textMuted rounded-xl text-sm font-medium hover:text-textMain">Cancelar</button>
+                    <button id="modal-confirm-btn" class="flex-1 py-2.5 bg-rose-600 text-white font-semibold rounded-xl text-sm hover:opacity-90">Confirmar</button>
+                `;
+                document.getElementById('modal-confirm-btn').onclick = () => {
+                    closeCustomModal();
+                    if (onConfirm) onConfirm();
+                };
+            } else {
+                btnContainer.innerHTML = `<button onclick="closeCustomModal()" class="flex-1 py-2.5 bg-accent text-white font-semibold rounded-xl text-sm hover:opacity-90">Aceptar</button>`;
+            }
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeCustomModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function setCategory(cat) {
+            document.querySelectorAll('.cat-btn').forEach(b => {
+                b.classList.remove('active', 'border-accent', 'bg-accent', 'text-white');
+                b.classList.add('bg-bgPrimary', 'border-borderCustom', 'text-textMuted');
+            });
+            const btn = document.querySelector(`[data-cat="${cat}"]`);
+            if(btn) {
+                btn.classList.add('active', 'border-accent', 'bg-accent', 'text-white');
+                btn.classList.remove('bg-bgPrimary', 'text-textMuted');
+            }
+            document.getElementById('affirmation-input').value = examples[cat];
+            validateAffirmation();
+        }
+
+        function validateAffirmation() {
+            const text = document.getElementById('affirmation-input').value.trim();
+            const msg = document.getElementById('validation-msg');
+            const lower = text.toLowerCase();
+            
+            let hasNegative = lower.includes('no ') || lower.includes('nunca') || lower.includes('jamás') || lower.includes('dejar de');
+            
+            if (text.length < 10) {
+                msg.className = "text-xs sm:text-sm p-3 rounded-xl mb-4 flex items-center gap-2 bg-rose-500/15 text-rose-400 border border-rose-500/30";
+                msg.innerHTML = "⚠️ La afirmación es muy corta.";
+            } else if (hasNegative) {
+                msg.className = "text-xs sm:text-sm p-3 rounded-xl mb-4 flex items-center gap-2 bg-rose-500/15 text-rose-400 border border-rose-500/30";
+                msg.innerHTML = "⚠️ Evita palabras en negativo (ej. 'no', 'nunca'). Formula en positivo.";
+            } else {
+                msg.className = "text-xs sm:text-sm p-3 rounded-xl mb-4 flex items-center gap-2 bg-emerald-500/15 text-emerald-400 border border-emerald-500/30";
+                msg.innerHTML = "✓ Frase redactada correctamente en positivo y presente.";
+            }
+        }
+
+        async function toggleRecording() {
+            const btn = document.getElementById('rec-btn');
+            if (!mediaRecorder || mediaRecorder.state === "inactive") {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    
+                    // Detect best supported MIME type for cross-browser playback
+                    if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                        audioTypeSupported = 'audio/webm;codecs=opus';
+                    } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                        audioTypeSupported = 'audio/mp4';
+                    } else {
+                        audioTypeSupported = 'audio/webm';
+                    }
+
+                    mediaRecorder = new MediaRecorder(stream, { mimeType: audioTypeSupported });
+                    audioChunks = [];
+                    
+                    mediaRecorder.ondataavailable = event => {
+                        if (event.data.size > 0) audioChunks.push(event.data);
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        recordedAudioBlob = new Blob(audioChunks, { type: audioTypeSupported });
+                        if (recordedAudioUrl) URL.revokeObjectURL(recordedAudioUrl);
+                        recordedAudioUrl = URL.createObjectURL(recordedAudioBlob);
+                        
+                        document.getElementById('play-rec-btn').style.display = 'flex';
+                        btn.innerHTML = "🎙️ Grabar de nuevo";
+                        btn.classList.remove('bg-rose-600', 'border-rose-600', 'recording-pulse', 'text-white');
+                        btn.classList.add('bg-bgPrimary', 'text-textMain');
+                        
+                        // Stop tracks to release microphone cleanly (avoids Notion/Browser extension locks)
+                        stream.getTracks().forEach(track => track.stop());
+                    };
+                    
+                    mediaRecorder.start(100);
+                    btn.innerHTML = "⏹️ Detener grabación";
+                    btn.classList.remove('bg-bgPrimary', 'text-textMain');
+                    btn.classList.add('bg-rose-600', 'border-rose-600', 'recording-pulse', 'text-white');
+                } catch (err) {
+                    showMessage("No se pudo acceder al micrófono. Verifica los permisos de tu navegador o desactiva extensiones de terceros.", "🎙️");
+                }
+            } else {
+                mediaRecorder.stop();
+            }
+        }
+
+        function playRecording() {
+            if (recordedAudioUrl) {
+                const audio = new Audio(recordedAudioUrl);
+                audio.play().catch(err => {
+                    showMessage("Error al reproducir el audio. Intenta grabar nuevamente.", "🔊");
+                });
+            }
+        }
+
+        function setSound(type, el) {
+            document.querySelectorAll('.sound-opt').forEach(o => {
+                o.classList.remove('active', 'border-accent', 'bg-accent/10', 'text-textMain');
+                o.classList.add('border-borderCustom', 'text-textMuted');
+            });
+            el.classList.add('active', 'border-accent', 'bg-accent/10', 'text-textMain');
+            el.classList.remove('border-borderCustom', 'text-textMuted');
+            currentSound = type;
+        }
+
+        function startAmbientSound() {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioContext.state === 'suspended') audioContext.resume();
+
+            ambientGain = audioContext.createGain();
+            ambientGain.gain.setValueAtTime(0.12, audioContext.currentTime);
+            ambientGain.connect(audioContext.destination);
+
+            if (currentSound === 'theta') {
+                ambientOscillator = audioContext.createOscillator();
+                ambientOscillator.type = 'sine';
+                ambientOscillator.frequency.setValueAtTime(140, audioContext.currentTime);
+                ambientOscillator.connect(ambientGain);
+                ambientOscillator.start();
+            } else if (currentSound === 'rain') {
+                const bufferSize = 2 * audioContext.sampleRate;
+                const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+                const output = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+                noiseNode = audioContext.createBufferSource();
+                noiseNode.buffer = noiseBuffer;
+                noiseNode.loop = true;
+
+                ambientFilter = audioContext.createBiquadFilter();
+                ambientFilter.type = 'lowpass';
+                ambientFilter.frequency.setValueAtTime(350, audioContext.currentTime);
+
+                noiseNode.connect(ambientFilter);
+                ambientFilter.connect(ambientGain);
+                noiseNode.start();
+            } else {
+                ambientOscillator = audioContext.createOscillator();
+                ambientOscillator.type = 'triangle';
+                ambientOscillator.frequency.setValueAtTime(108, audioContext.currentTime);
+                ambientOscillator.connect(ambientGain);
+                ambientOscillator.start();
+            }
+            isPlayingAmbient = true;
+
+            if (recordedAudioUrl) {
+                playVoiceLoop();
+            }
+        }
+
+        function playVoiceLoop() {
+            if (!isPlayingAmbient || !recordedAudioUrl) return;
+            activeVoiceAudio = new Audio(recordedAudioUrl);
+            activeVoiceAudio.volume = 0.85;
+            activeVoiceAudio.onended = () => {
+                if (isPlayingAmbient) {
+                    setTimeout(playVoiceLoop, 4000);
+                }
+            };
+            activeVoiceAudio.play().catch(e => console.log("Audio loop handled", e));
+        }
+
+        function stopAmbientSound() {
+            isPlayingAmbient = false;
+            if (ambientOscillator) {
+                try { ambientOscillator.stop(); } catch(e){}
+                ambientOscillator = null;
+            }
+            if (noiseNode) {
+                try { noiseNode.stop(); } catch(e){}
+                noiseNode = null;
+            }
+            if (activeVoiceAudio) {
+                activeVoiceAudio.pause();
+                activeVoiceAudio = null;
+            }
+        }
+
+        function startNightMode() {
+            const text = document.getElementById('affirmation-input').value;
+            document.getElementById('night-text').innerText = `"${text}"`;
+            const modal = document.getElementById('night-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            startAmbientSound();
+        }
+
+        function closeNightMode() {
+            const modal = document.getElementById('night-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+            stopAmbientSound();
+        }
+
+        let progress = JSON.parse(localStorage.getItem('umbral_progress')) || Array(21).fill(false);
+
+        function renderTracker() {
+            const grid = document.getElementById('tracker-grid');
+            grid.innerHTML = '';
+            progress.forEach((completed, index) => {
+                const cell = document.createElement('div');
+                cell.className = `aspect-square bg-bgPrimary border border-borderCustom rounded-xl flex flex-col items-center justify-center text-xs cursor-pointer transition-all ${completed ? 'bg-accent text-white border-accent shadow-[0_0_12px_rgba(157,78,221,0.4)] font-semibold' : 'text-textMuted hover:border-accent hover:text-textMain'}`;
+                cell.innerHTML = `<span class="text-[10px] opacity-75">Día</span><strong>${index + 1}</strong>`;
+                cell.onclick = () => {
+                    progress[index] = !progress[index];
+                    localStorage.setItem('umbral_progress', JSON.stringify(progress));
+                    renderTracker();
+                };
+                grid.appendChild(cell);
+            });
+        }
+
+        function resetTracker() {
+            showMessage("¿Deseas reiniciar tu ciclo de 21 días?", "🔄", true, () => {
+                progress = Array(21).fill(false);
+                localStorage.setItem('umbral_progress', JSON.stringify(progress));
+                renderTracker();
+            });
+        }
+
+        renderTracker();
+    </script>
+</body>
+</html>
